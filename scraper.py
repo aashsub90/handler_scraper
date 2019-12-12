@@ -37,13 +37,13 @@ def main(input_file, output_file, consumer_threads):
     producer_thread.start()
 
     # Start thread for Consumer instance - URL consumption and parsing
-    url_consumer = []
+    url_consumers = []
     for i in range(consumer_threads):
         url_consumer = Consumer(url_queue, data_queue, extract=False)
         url_consumer_thread = Thread(
             name="URL Consumer", target=url_consumer.consume_url)
         url_consumer_thread.start()
-        url_consumer.append(url_consumer_thread)
+        url_consumers.append(url_consumer_thread)
 
     # Start threads for Consumer instance (Data consumption and extraction)
     data_consumers = []
@@ -57,7 +57,7 @@ def main(input_file, output_file, consumer_threads):
     # Ensure threads complete tasks
     producer_thread.join()
 
-    for t in url_consumer:
+    for t in url_consumers:
         t.join()
 
     for t in data_consumers:
